@@ -2,6 +2,18 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 let styles = {
+  layout: {
+    width: '500px',
+    display: 'flex',
+    flexDirection: 'column',
+    margin: 'auto',
+    alignItems: 'center',
+    fontFamily: 'Helvetica'
+  },
+  inputLayout: {
+    display: 'flex',
+    alignItems: 'space-between'
+  },
   logo: {
     width: '52px',
     height: '64px',
@@ -58,14 +70,16 @@ class App extends React.Component {
   render() {
     const formatCost = `$${this.formatCost()}`;
     return (
-      <div>
+      <div style={styles.layout}>
         <image style={styles.logo} src='stop-smoking-logo.png'/>
-        <h1>Smoke Calculator</h1>
-        <label>Years smoking:
-          <InputBox
-            value={this.state.yearsSmoking}
-            sendText={this.updateYears}/>
-        </label>
+        <h2>Smoke Calculator</h2>
+        <div style={styles.inputLayout}>
+          <label>Years smoking:
+            <InputBox
+              value={this.state.yearsSmoking}
+              sendText={this.updateYears}/>
+          </label>
+        </div>
         <br/>
         <br/>
         <label>Price per packet:
