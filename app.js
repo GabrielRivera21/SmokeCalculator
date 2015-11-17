@@ -29,46 +29,48 @@ class App extends React.Component {
       packetsPerDay: 1,
       cost: 0
     };
+    this.updateStartAge = this.updateStartAge.bind(this);
+    this.updateFinishedAge = this.updateFinishedAge.bind(this);
+    this.updatePacketPrice = this.updatePacketPrice.bind(this);
+    this.updatePacketsPerDay = this.updatePacketsPerDay.bind(this);
+    this.updateCost = this.updateCost.bind(this);
   }
   updateStartAge(age) {
     this.setState({startAge: parseInt(age)});
-    this.updateCost();
+    this.updateCost(parseInt(age), this.state.finishedAge, this.state.packetPrice, this.state.packetsPerDay);
   }
   updateFinishedAge(age) {
-    console.log(this.state.finishedAge);
     this.setState({finishedAge: parseInt(age)});
-    console.log(this.state.finishedAge);
-    this.updateCost();
+    this.updateCost(this.state.startAge, parseInt(age), this.state.packetPrice, this.state.packetsPerDay);
   }
   updatePacketPrice(price) {
     this.setState({packetPrice: parseInt(price)});
-    this.updateCost();
+    this.updateCost(this.state.startAge, this.state.finishedAge, parseInt(price), this.state.packetsPerDay);
   }
   updatePacketsPerDay(packetsPerDay) {
     this.setState({packetsPerDay: parseInt(packetsPerDay)});
-    this.updateCost();
+    this.updateCost(this.state.startAge, parseInt(age), this.state.packetPrice, packetsPerDay);
   }
-  updateCost() {
-    let years = this.state.finishedAge - this.state.startAge;
-    let cost = (years * 365.25) * this.state.packetsPerDay * this.state.packetPrice;
+  updateCost(startAge, finishedAge, packetPrice, packetsPerDay) {
+    let years = finishedAge - startAge;
+    let cost = (years * 365.25) * packetsPerDay * packetPrice;
     this.setState({cost});
   }
   render() {
-    console.log(this.state);
     return (
       <div>
         <h1>Smoke Calculator</h1>
         <label>Starting age:
           <InputBox
             value={this.state.startAge}
-            sendText={::this.updateStartAge}/>
+            sendText={this.updateStartAge}/>
         </label>
         <br/>
         <br/>
         <label>Finished age:
           <InputBox
             value={this.state.finishedAge}
-            sendText={::this.updateFinishedAge}/>
+            sendText={this.updateFinishedAge}/>
         </label>
         <br/>
         <br/>
