@@ -1,6 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+let styles = {
+  logo: {
+    width: '52px',
+    height: '64px',
+    margin: 'auto'
+  }
+}
+
 class InputBox extends React.Component {
   constructor(props) {
     super(props);
@@ -23,20 +31,15 @@ class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      startAge: 10,
-      finishedAge: 10,
+      yearsSmoking: 10,
       packetPrice: 1,
       packetsPerDay: 1,
       cost: 0
     };
   }
-  updateStartAge = (startAge) => {
-    const cost = this.getCost(Object.assign(this.state, {startAge}));
-    this.setState({startAge, cost});
-  }
-  updateFinishedAge = (finishedAge) => {
-    const cost = this.getCost(Object.assign(this.state, {finishedAge}));
-    this.setState({finishedAge, cost});
+  updateYears = (yearsSmoking) => {
+    const cost = this.getCost(Object.assign(this.state, {yearsSmoking}));
+    this.setState({yearsSmoking, cost});
   }
   updatePacketPrice = (packetPrice) => {
     const cost = this.getCost(Object.assign(this.state, {packetPrice}));
@@ -47,8 +50,7 @@ class App extends React.Component {
     this.setState({packetsPerDay, cost});
   }
   getCost = (state) => {
-    const years = state.finishedAge - state.startAge;
-    return years * 365.25 * state.packetsPerDay * state.packetPrice;
+    return state.yearsSmoking * 365.25 * state.packetsPerDay * state.packetPrice;
   }
   formatCost = () => {
     return this.state.cost.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -57,18 +59,12 @@ class App extends React.Component {
     const formatCost = `$${this.formatCost()}`;
     return (
       <div>
+        <image style={styles.logo} src='stop-smoking-logo.png'/>
         <h1>Smoke Calculator</h1>
-        <label>Starting age:
+        <label>Years smoking:
           <InputBox
-            value={this.state.startAge}
-            sendText={this.updateStartAge}/>
-        </label>
-        <br/>
-        <br/>
-        <label>Finished age:
-          <InputBox
-            value={this.state.finishedAge}
-            sendText={this.updateFinishedAge}/>
+            value={this.state.yearsSmoking}
+            sendText={this.updateYears}/>
         </label>
         <br/>
         <br/>
