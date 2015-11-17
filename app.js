@@ -12,7 +12,7 @@ class InputBox extends React.Component {
     return (
       <input
         ref='inputNode'
-        type='number'
+        type='text'
         value={this.props.value}
         onChange={this.handleChange} />
     );
@@ -29,34 +29,32 @@ class App extends React.Component {
       packetsPerDay: 1,
       cost: 0
     };
-    this.updateStartAge = this.updateStartAge.bind(this);
-    this.updateFinishedAge = this.updateFinishedAge.bind(this);
-    this.updatePacketPrice = this.updatePacketPrice.bind(this);
-    this.updatePacketsPerDay = this.updatePacketsPerDay.bind(this);
-    this.updateCost = this.updateCost.bind(this);
   }
-  updateStartAge(age) {
-    this.setState({startAge: parseInt(age)});
-    this.updateCost(parseInt(age), this.state.finishedAge, this.state.packetPrice, this.state.packetsPerDay);
+  updateStartAge = (startAge) => {
+    const cost = this.getCost(Object.assign(this.state, {startAge}));
+    this.setState({startAge, cost});
   }
-  updateFinishedAge(age) {
-    this.setState({finishedAge: parseInt(age)});
-    this.updateCost(this.state.startAge, parseInt(age), this.state.packetPrice, this.state.packetsPerDay);
+  updateFinishedAge = (finishedAge) => {
+    const cost = this.getCost(Object.assign(this.state, {finishedAge}));
+    this.setState({finishedAge, cost});
   }
-  updatePacketPrice(price) {
-    this.setState({packetPrice: parseInt(price)});
-    this.updateCost(this.state.startAge, this.state.finishedAge, parseInt(price), this.state.packetsPerDay);
+  updatePacketPrice = (packetPrice) => {
+    const cost = this.getCost(Object.assign(this.state, {packetPrice}));
+    this.setState({packetPrice, cost});
   }
-  updatePacketsPerDay(packetsPerDay) {
-    this.setState({packetsPerDay: parseInt(packetsPerDay)});
-    this.updateCost(this.state.startAge, parseInt(age), this.state.packetPrice, packetsPerDay);
+  updatePacketsPerDay = (packetsPerDay) => {
+    const cost = this.getCost(Object.assign(this.state, {packetsPerDay}));
+    this.setState({packetsPerDay, cost});
   }
-  updateCost(startAge, finishedAge, packetPrice, packetsPerDay) {
-    let years = finishedAge - startAge;
-    let cost = (years * 365.25) * packetsPerDay * packetPrice;
-    this.setState({cost});
+  getCost = (state) => {
+    const years = state.finishedAge - state.startAge;
+    return years * 365.25 * state.packetsPerDay * state.packetPrice;
+  }
+  formatCost = () => {
+    return this.state.cost.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
   render() {
+    const formatCost = `$${this.formatCost()}`;
     return (
       <div>
         <h1>Smoke Calculator</h1>
@@ -77,16 +75,16 @@ class App extends React.Component {
         <label>Price per packet:
           <InputBox
             value={this.state.packetPrice}
-            sendText={::this.updatePacketPrice}/>
+            sendText={this.updatePacketPrice}/>
         </label>
         <br/>
         <br/>
         <label>Packets per day:
           <InputBox
             value={this.state.packetsPerDay}
-            sendText={::this.updatePacketsPerDay}/>
+            sendText={this.updatePacketsPerDay}/>
         </label>
-        <p>Cost: {this.state.cost}</p>
+        <p>Cost: {formatCost}</p>
       </div>
     );
   }
