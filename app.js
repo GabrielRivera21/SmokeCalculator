@@ -3,21 +3,23 @@ import ReactDOM from 'react-dom';
 
 let styles = {
   layout: {
-    width: '500px',
+    width: '800px',
     display: 'flex',
     flexDirection: 'column',
     margin: 'auto',
     alignItems: 'center',
-    fontFamily: 'Helvetica'
+    fontFamily: 'Helvetica',
+    color: '#666'
   },
-  inputLayout: {
+  cost: {
+    fontSize: '36px',
+    margin: '0'
+  },
+  iconLayout: {
+    width: '43%',
     display: 'flex',
-    alignItems: 'space-between'
-  },
-  logo: {
-    width: '52px',
-    height: '64px',
-    margin: 'auto'
+    alignItems: 'center',
+    justifyContent: 'space-between'
   }
 }
 
@@ -32,9 +34,42 @@ class InputBox extends React.Component {
     return (
       <input
         ref='inputNode'
+        id={this.props.id}
         type='text'
         value={this.props.value}
-        onChange={this.handleChange} />
+        onChange={this.handleChange}
+        placeholder={this.props.placeholder} />
+    );
+  }
+}
+
+class AppIcon extends React.Component {
+  static defaultProps = {
+    viewBox: '0 0 200 250',
+    width: '50px',
+    height: '75px'
+  }
+  renderIcon() {
+    return (
+      <g id='stop-smoking-logo' transform='translate(-294.000000, -163.000000)'>
+        <g id='icon' transform='translate(294.000000, 163.000000)'>
+          <rect id='Rectangle-1' fill='#F44336' x='0' y='0' width='200' height='249.003984'></rect>
+          <path d='M200,250 L0,250 L0,136.454183 L200,136.454183 L200,250 Z M200,136.454189 L0,136.454185 L100,35.8565737 L200,136.454189 Z' id='Rectangle-2' fill='#FFFFFF'></path>
+          <path d='M2.5,230.079681 L197.5,230.079681' id='Line' stroke='#F44336' strokeWidth='5' strokeLinecap='square'></path>
+          <path d='M0.5,14.4422311 L199.5,14.4422311' id='Line' stroke='#FFFFFF' strokeLinecap='square'></path>
+      </g>
+    </g>
+    );
+  }
+  render() {
+    return (
+      <svg
+        viewBox={this.props.viewBox}
+        width={this.props.width}
+        height={this.props.height}
+        >
+        {this.renderIcon()}
+      </svg>
     );
   }
 }
@@ -43,9 +78,9 @@ class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      yearsSmoking: 10,
-      packetPrice: 1,
-      packetsPerDay: 1,
+      yearsSmoking: '',
+      packetPrice: '',
+      packetsPerDay: '',
       cost: 0
     };
   }
@@ -71,30 +106,35 @@ class App extends React.Component {
     const formatCost = `$${this.formatCost()}`;
     return (
       <div style={styles.layout}>
-        <image style={styles.logo} src='stop-smoking-logo.png'/>
-        <h2>Smoke Calculator</h2>
-        <div style={styles.inputLayout}>
-          <label>Years smoking:
-            <InputBox
-              value={this.state.yearsSmoking}
-              sendText={this.updateYears}/>
-          </label>
+        <div style={styles.iconLayout}>
+          <AppIcon/>
+          <h4>Smoke Calculator</h4>
         </div>
         <br/>
-        <br/>
-        <label>Price per packet:
-          <InputBox
-            value={this.state.packetPrice}
-            sendText={this.updatePacketPrice}/>
-        </label>
-        <br/>
-        <br/>
-        <label>Packets per day:
-          <InputBox
-            value={this.state.packetsPerDay}
-            sendText={this.updatePacketsPerDay}/>
-        </label>
-        <p>Cost: {formatCost}</p>
+        <div className='row'>
+          <div className='input-field col s4'>
+            <InputBox
+              value={this.state.yearsSmoking}
+              sendText={this.updateYears}
+              id='yearsSmoking'/>
+            <label htmlFor='yearsSmoking'>Years smoking</label>
+          </div>
+          <div className='input-field col s4'>
+            <InputBox
+              value={this.state.packetPrice}
+              sendText={this.updatePacketPrice}
+              id='pricePerPacket'/>
+            <label htmlFor='pricePerPacket'>Price per packet</label>
+          </div>
+          <div className='input-field col s4'>
+            <InputBox
+              value={this.state.packetsPerDay}
+              sendText={this.updatePacketsPerDay}
+              id='packetsPerDay'/>
+            <label htmlFor='packetsPerDay'>Packets per day</label>
+          </div>
+        </div>
+        <p style={styles.cost}>{formatCost}</p>
       </div>
     );
   }
